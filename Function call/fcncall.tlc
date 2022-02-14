@@ -1,0 +1,124 @@
+%% 
+%% File : ran_res.tlc generated from ran_res.ttlc revsion 1.6
+%% 
+%%
+%% Ligei, 1-May-2020
+%% Copyright 1990-2009 The MathWorks, Inc.
+%%
+%% Abstract:
+%%      sfunction timestwo block target file
+%%      ran_res.m is used to
+
+
+%implements "fcncall" "C"
+
+
+%function BlockTypeSetup(block, system) void
+
+
+ %%<LibAddToCommonIncludes("<stdlib.h>")> 
+ %%<LibAddToCommonIncludes("<time.h>")>
+ %%<LibAddToCommonIncludes("<stdio.h>")>
+
+    %assign pubName = LibGetMdlPubHdrBaseName()
+
+    %openfile buffer
+        extern void call_fun();
+    %closefile buffer
+    %<LibCacheFunctionPrototype(buffer)>
+%endfunction %% BlockTypeSetup
+
+/%
+%function Start(block, system) Output
+/* Update rand start*/
+srand((int)time(NULL));
+%endfunction
+%/
+
+%function Outputs(block, system) Output
+    %%assign rand_gen = "(double)((int)(((double)rand())/RAND_MAX*100))/100"
+    /%
+        %assign rollVars = "Y"
+        %roll idx = RollRegions, lcv = RollThreshold, block, "Roller", rollVars
+            %<LibBlockOutputSignal(0, "", lcv, idx)> =1;
+        %endroll
+    %/
+
+    %%<LibBlockOutputSignal(0, "", "", 0)> = 1;
+
+    /%
+        %assign y = LibBlockOutputSignal(0, "", "", 0)
+            double y = 10;
+        %<y> = y;
+    %/ 
+
+    %%assign uAddr = LibBlockInputSignal(0, "", "", 1)
+    /%
+        UCV尝试，详见文件blkiolib.tlc
+        %assign u = LibBlockInputSignal( 0, "i", "", 0)
+        %assign y = LibBlockOutputSignal(0, "", "", 0)
+        %<y> =  %<u>;
+    %/
+    /%
+        C mex function produce fucntion call signal
+    %/
+    
+    /%
+    %%尝试将代码写入到新文件文件
+    %assign pubName = LibGetMdlPubHdrBaseName()
+
+    call_file(%<LibGetModelName()>_U, %<LibGetModelName()>_Y);
+
+    %assign cFile = LibCreateSourceFile("Source", "Custom", "timestwo")
+
+    %openfile typesBuf
+	
+    
+    #include "%<pubName>.h"
+
+    //extern ExtU_%<LibGetModelName()>_T %<LibGetModelName()>_U;
+
+    //extern ExtY_%<LibGetModelName()>_T %<LibGetModelName()>_Y;
+    
+    %assign In_name = LibBlockInputSignalDataTypeName(0, "")
+    
+    %assign Out_name = LibBlockOutputSignalDataTypeName(0, "")
+
+    void call_file(ExtU_%<LibGetModelName()>_T %<LibGetModelName()>_U, ExtY_%<LibGetModelName()>_T %<LibGetModelName()>_Y){
+    %assign u = LibBlockInputSignal( 0, "", "", 0)
+        if((int)%<u> % 2)
+        {
+            %<LibBlockExecuteFcnCall(block, 0)>
+        }
+    }
+    %closefile typesBuf
+    
+    %<LibSetSourceFileSection(cFile,"Functions",typesBuf)>
+    %/
+
+
+    call_fun();
+    %%assign pubName = LibGetMdlSrcBaseName()
+    
+    %%assign cFile = LibCreateSourceFile("Source", "Simulink", pubName)
+
+    %openfile func
+
+    void call_fun()
+    {
+        %assign u = LibBlockInputSignal( 0, "", "", 0)
+        if((int)%<u> % 2)
+        {
+            %<LibBlockExecuteFcnCall(block, 0)>
+        }
+        
+    }
+
+    %closefile func
+    %assign cFile = LibGetModelDotCFile()
+    %<LibSetSourceFileSection(cFile,"Functions",func)>
+
+    
+
+
+%endfunction

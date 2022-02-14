@@ -1,0 +1,33 @@
+%% 
+%% File : ran_res.tlc generated from ran_res.ttlc revsion 1.6
+%% 
+%%
+%% Ligei, 1-May-2020
+%% Copyright 1990-2009 The MathWorks, Inc.
+%%
+%% Abstract:
+%%      sfunction timestwo block target file
+%%      ran_res.m is used to
+
+
+%implements "ran_res" "C"
+
+%function BlockTypeSetup(block, system) void
+ %<LibAddToCommonIncludes("<stdlib.h>")> 
+ %<LibAddToCommonIncludes("<time.h>")>
+ %<LibAddToCommonIncludes("<stdio.h>")>
+%endfunction %% BlockTypeSetup
+
+%function Start(block, system) Output
+/* Update rand start*/
+srand((int)time(NULL));
+%endfunction
+
+%function Outputs(block, system) Output
+    %assign rand_gen = "(double)((int)(((double)rand())/RAND_MAX*100))/100"
+    %assign rollVars = "Y"
+    %roll idx = RollRegions, lcv = RollThreshold, block, "Roller", rollVars
+        %<LibBlockOutputSignal(0, "", lcv, idx)> = 2 * %<ParamSettings.MAX> * %<rand_gen> - %<ParamSettings.MAX>;
+    %endroll  
+
+%endfunction

@@ -6,8 +6,8 @@ Target Language Compiler ([TLC](https://ww2.mathworks.cn/help/rtw/block-authorin
 ## Content Description
 Sometimes, the default Simulink library maynot satisfy our requirement, so we should rely on [S function](https://ww2.mathworks.cn/help/rtw/s-functions.html) with TLC to generate custome code. Now, there are four examples:
 * [Rand Generator](https://github.com/LLiang-Li/Target-Language-Compiler/tree/main/Rand%20Generator)
-* Redefine pow block 
-* Function call
-* Custom Main function
+* [Redefine pow block](https://github.com/LLiang-Li/Target-Language-Compiler/tree/main/Function%20call)
+* [Function call](https://github.com/LLiang-Li/Target-Language-Compiler/tree/main/Rand%20Generator)
+* [Custom Main function](https://github.com/LLiang-Li/Target-Language-Compiler/tree/main/Redefine%20pow%20block)
 
 The detail is shown in [wiki](https://github.com/LLiang-Li/Target-Language-Compiler/wiki).

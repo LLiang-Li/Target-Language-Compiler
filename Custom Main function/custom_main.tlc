@@ -1,0 +1,65 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% 
+%% 
+%%
+%% Abstract:
+%%   Example Embedded Coder custom file processing template.
+%%
+%%   Note: This file can contain any valid TLC code, which Embedded Coder
+%%   executes just prior to writing the generated source files to disk.
+%%   Using this template "hook" file, you are able to augment the generated
+%%   source code and create additional files.
+%%
+%% Copyright 1994-2010 The MathWorks, Inc.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%selectfile NULL_FILE
+
+%%  Uncomment this TLC line to execute the example
+%%   ||   ||
+%%   ||   ||
+%%   \/   \/
+%assign ERTCustomFileTest = TLC_TRUE
+
+%if EXISTS("ERTCustomFileTest") 
+    
+    %assign cFile = LibCreateSourceFile("Source", "Custom", "ert_main")
+	%%assign cFile = LibGetModelDotCFile()
+    
+    %openfile ert_main_include
+    
+    #include<stdio.h>
+    #include"%<LibGetModelName()>.h"
+    
+
+    %closefile ert_main_include
+    %<LibSetSourceFileSection(cFile,"Includes", ert_main_include)>
+    
+    %openfile Defbuf
+    extern ExtU_%<LibGetModelName()>_T %<LibGetModelName()>_U;
+
+    extern ExtY_%<LibGetModelName()>_T %<LibGetModelName()>_Y;
+    
+    %closefile Defbuf
+    %<LibSetSourceFileSection(cFile,"Defines", Defbuf)>
+
+    %openfile ert_main
+    
+    //Create Main function
+    int main()
+    {
+        printf("Model Initial!\n");
+        %<LibCallModelInitialize()>
+        printf("Model Step!\n");
+        %<LibCallModelStep(0)>
+        printf("Model Terminal!\n");
+        %<LibCallModelTerminate()>
+    }
+    
+
+    %closefile ert_main
+
+    %<LibSetSourceFileSection(cFile,"Functions", ert_main)>
+
+%endif

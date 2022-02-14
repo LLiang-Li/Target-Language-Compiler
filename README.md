@@ -10,4 +10,4 @@ Now, there are four examples:
 * function call
 * modify main function
 
-the detail is shown in wiki.
+the detail is shown in [wiki](https://github.com/LLiang-Li/Target-Language-Compiler/wiki).

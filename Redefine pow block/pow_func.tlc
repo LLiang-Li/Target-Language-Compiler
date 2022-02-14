@@ -1,0 +1,36 @@
+%% Copyright 1990-2009 The MathWorks, Inc.
+
+%implements "pow_func" "C"
+
+%% Function: BlockTypeSetup ==================================
+%%
+%function BlockTypeSetup(block, system) void
+%assign pubName = LibGetMdlPubHdrBaseName()
+%assign modelH  = LibCreateSourceFile("Header", "Simulink", pubName)
+
+%openfile tmpBuf
+
+ #include<math.h>
+
+ %closefile tmpBuf
+
+%<LibSetSourceFileSection(modelH,"Includes",tmpBuf)>
+%endfunction
+
+
+
+%% Function: Outputs ===========================================================
+%%
+%function Outputs(block, system) Output
+  /* %<Type> Block: %<Name> */
+  %%
+  /* Multiply input by two */
+  %assign rollVars = ["U", "Y"]
+  %roll idx = RollRegions, lcv = RollThreshold, block, "Roller", rollVars
+    %<LibBlockOutputSignal(0, "", lcv, idx)> = \
+    pow(%<LibBlockInputSignal(0, "", lcv, idx)>,%<LibBlockInputSignal(1, "", lcv, idx)>);
+  %endroll
+
+%endfunction
+
+%% [EOF]

@@ -1,1 +1,2 @@
-# Target-Language-Compiler
+# Target Language Compiler
+Target Language Compiler (TLC) is an integral part of the code generator. It enables you to customize generated code. Through customization, you can produce platform-specific code, or you can incorporate your own algorithmic changes for performance, code size, or compatibility with existing methods. [Online document](https://ww2.mathworks.cn/help/rtw/block-authoring-with-tlc.html)
